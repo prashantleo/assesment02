@@ -17,6 +17,7 @@ import Constants from 'expo-constants'
 import * as Permissions from 'expo-permissions'
 import * as FileSystem from 'expo-file-system';
 
+
 class Tab3 extends React.Component {
   state = {
     isTfReady: false,
@@ -26,15 +27,18 @@ class Tab3 extends React.Component {
   }
 
   async componentDidMount() {
+    //platform adapter
     await tf.ready()
     this.setState({
+
       isTfReady: true
     })
+    //mobilenet model
     this.model = await mobilenet.load()
     this.setState({ isModelReady: true })
     this.getPermissionAsync()
   }
-
+//Asking user permission
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
@@ -44,7 +48,8 @@ class Tab3 extends React.Component {
     }
   }
 
-  imageToTensor(rawImageData) {
+  //Converting the image to tensor
+imageToTensor(rawImageData) {
     const TO_UINT8ARRAY = true
     const { width, height, data } = jpeg.decode(rawImageData, TO_UINT8ARRAY)
     // Drop the alpha channel info for mobilenet
@@ -60,6 +65,8 @@ class Tab3 extends React.Component {
 
     return tf.tensor3d(buffer, [height, width, 3])
   }
+
+  //classify the image
 
   classifyImage = async () => {
     try {
@@ -156,6 +163,7 @@ class Tab3 extends React.Component {
             predictions &&
             predictions.map(p => this.renderPrediction(p))}
         </View>
+
         <View style={styles.footer}>
           <Text style={styles.poweredBy}>Powered by:</Text>
           <Image source={require('../assets/tfjs.jpg')} style={styles.tfLogo} />

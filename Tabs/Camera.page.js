@@ -67,6 +67,7 @@ export default class CameraPage extends React.Component {
         this.getCameraRollPermissions();
 
     };
+
     
   async getCameraRollPermissions() {
    // const { Permissions } = Expo;
